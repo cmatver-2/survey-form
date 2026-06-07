@@ -16,17 +16,15 @@ A clean, responsive survey form built with vanilla HTML, CSS, and JavaScript.
 - Confirmation message on successful submit
 
 ## 🗂️ Folder Structure
+
+```
 survey-form/
-
 ├── index.html
-
 ├── css/
-
 │   └── style.css
-
 └── js/
-
-└── app.js
+    └── app.js
+```
 
 ## 🛠️ Built With
 - HTML5
