@@ -17,10 +17,15 @@ A clean, responsive survey form built with vanilla HTML, CSS, and JavaScript.
 
 ## 🗂️ Folder Structure
 survey-form/
+
 ├── index.html
+
 ├── css/
+
 │   └── style.css
+
 └── js/
+
 └── app.js
 
 ## 🛠️ Built With
