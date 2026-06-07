@@ -1,0 +1,11 @@
+# Mac system file
+.DS_Store
+
+# Windows system file
+Thumbs.db
+
+# VS Code settings (optional, some people include this)
+.vscode/
+
+# Environment variables (API keys, passwords - never upload these)
+.env
