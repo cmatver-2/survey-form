@@ -15,11 +15,6 @@ function saveSubmissions(data) {
 // ── Toaster ───────────────────────────────────────────────────
 function showToast(message, type = 'info', duration = 4000) {
   const toaster = document.getElementById('toaster');
-
-  // Bug #1 fix: if a toast with this exact message already exists, don't stack another
-  const existing = [...toaster.querySelectorAll('.toast')].find(t => t.textContent === message);
-  if (existing) return;
-
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.textContent = message;
@@ -69,53 +64,16 @@ function initWordCount() {
 // ── Phone: only digits ────────────────────────────────────────
 function initPhoneFilter() {
   const phone = document.getElementById('phone');
-
   phone.addEventListener('input', () => {
     phone.value = phone.value.replace(/\D/g, '').slice(0, 10);
   });
-
-  // Bug #7 fix: intercept paste event and strip non-digits before they land
-  phone.addEventListener('paste', (e) => {
-    e.preventDefault();
-    const pasted = (e.clipboardData || window.clipboardData).getData('text');
-    const digitsOnly = pasted.replace(/\D/g, '').slice(0, 10);
-    phone.value = digitsOnly;
-  });
 }
 
-// ── Email Send (EmailJS) ──────────────────────────────────────
-// Bug #4 fix: sends a real confirmation email using EmailJS (free tier)
-// SETUP STEPS:
-//   1. Go to https://www.emailjs.com and create a free account
-//   2. Add an Email Service (Gmail recommended) → copy your Service ID
-//   3. Create an Email Template with variables {{to_name}} and {{to_email}}
-//      Template body: "Dear {{to_name}}, You have successfully submitted the survey."
-//   4. Copy your Template ID and Public Key
-//   5. Replace the three placeholder values below with your real IDs
-
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz456'
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'abcDEF123456'
-
-function initEmailJS() {
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-}
-
+// ── Simulated Email Send ──────────────────────────────────────
 function sendConfirmationEmail(name, email) {
-  const templateParams = {
-    to_name:  name,
-    to_email: email,
-    message:  'You have successfully submitted the survey.'
-  };
-
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(() => {
-      showToast(`Confirmation email sent to ${email}`, 'info', 5000);
-    })
-    .catch((err) => {
-      console.error('EmailJS error:', err);
-      showToast('Submission saved, but email could not be sent.', 'error');
-    });
+  // In a real app, call your backend/email API here.
+  console.log(`[Email Simulation] To: ${email}\nDear ${name},\nYou have successfully submitted the survey.`);
+  showToast(`Confirmation email sent to ${email}`, 'info', 5000);
 }
 
 // ── Render Submissions ────────────────────────────────────────
@@ -124,19 +82,13 @@ function truncateMessage(text) {
 }
 
 function renderSubmissions() {
-  const list    = document.getElementById('submissionsList');
-  const empty   = document.getElementById('emptyState');
-  const heading = document.getElementById('submissionsHeading');
-  const data    = getSubmissions();
+  const list  = document.getElementById('submissionsList');
+  const empty = document.getElementById('emptyState');
+  const data  = getSubmissions();
 
-  // Bug #6 fix: hide empty state FIRST before touching the list to prevent flash
-  empty.style.display = 'none';
   list.innerHTML = '';
-
-  // Bug #10 fix: show count in heading
-  heading.textContent = data.length > 0 ? `Submissions (${data.length})` : 'Submissions';
-
   if (data.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
 
   [...data].reverse().forEach(s => {
     const card = document.createElement('div');
@@ -169,16 +121,14 @@ function initForm() {
   const emailHint = document.getElementById('emailHint');
   const phoneHint = document.getElementById('phoneHint');
   const nameHint  = document.getElementById('nameHint');
-  const msgHint   = document.getElementById('messageHint');
 
   form.addEventListener('submit', e => {
     e.preventDefault();
     let valid = true;
 
-    // Name — Bug #3 fix: must contain at least 2 real letters, not just any characters
-    const nameVal = name.value.trim();
-    if (nameVal.length < 2 || !/[a-zA-Z]{2,}/.test(nameVal)) {
-      setFieldState(name, nameHint, false, 'Please enter a valid name (letters only).');
+    // Name
+    if (name.value.trim().length < 2) {
+      setFieldState(name, nameHint, false, 'Name must be at least 2 characters.');
       valid = false;
     } else {
       setFieldState(name, nameHint, true, '');
@@ -209,12 +159,10 @@ function initForm() {
     // Message
     if (msg.value.trim() === '') {
       valid = false;
-      setFieldState(msg, msgHint, false, 'Please enter a message.');
+      showToast('Please enter a message.', 'error');
     } else if (wordCount(msg.value) > 200) {
       valid = false;
-      setFieldState(msg, msgHint, false, 'Message exceeds 200 words.');
-    } else {
-      setFieldState(msg, msgHint, true, '');
+      showToast('Message exceeds 200 words.', 'error');
     }
 
     if (!valid) return;
@@ -235,7 +183,6 @@ function initForm() {
 
     form.reset();
     [name, email, phone, msg].forEach(f => { f.classList.remove('valid','invalid'); });
-    msgHint.textContent = '';
     document.getElementById('wordCount').textContent = '0 / 200 words';
     renderSubmissions();
   });
@@ -243,7 +190,6 @@ function initForm() {
 
 // ── Boot ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  initEmailJS();
   initWordCount();
   initPhoneFilter();
   initForm();
