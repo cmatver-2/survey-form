@@ -87,9 +87,9 @@ function renderSubmissions() {
   const empty = document.getElementById('emptyState');
   const data  = getSubmissions();
 
+  empty.style.display = 'none';
   list.innerHTML = '';
   if (data.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
 
   [...data].reverse().forEach(s => {
     const card = document.createElement('div');
