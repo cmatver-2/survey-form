@@ -242,7 +242,7 @@ button[type="submit"]:active { transform: scale(0.98); }
 }
 .entry-timestamp {
   font-size: 11px;
-  color: var(--border);
+  color: var(--muted);
   text-align: right;
   margin-top: 8px;
 }
