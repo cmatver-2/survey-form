@@ -15,6 +15,7 @@ function saveSubmissions(data) {
 // ── Toaster ───────────────────────────────────────────────────
 function showToast(message, type = 'info', duration = 4000) {
   const toaster = document.getElementById('toaster');
+  if ([...toaster.querySelectorAll('.toast')].find(t => t.textContent === message)) return;
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.textContent = message;
