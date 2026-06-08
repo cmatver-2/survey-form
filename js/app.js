@@ -65,6 +65,11 @@ function initWordCount() {
 // ── Phone: only digits ────────────────────────────────────────
 function initPhoneFilter() {
   const phone = document.getElementById('phone');
+  phone.addEventListener('paste', (e) => {
+    e.preventDefault(); // stops browser from pasting automatically
+    const pasted = (e.clipboardData || window.clipboardData).getData('text');
+    phone.value = pasted.replace(/\D/g, '').slice(0, 10);
+  });
   phone.addEventListener('input', () => {
     phone.value = phone.value.replace(/\D/g, '').slice(0, 10);
   });
@@ -86,10 +91,12 @@ function renderSubmissions() {
   const list  = document.getElementById('submissionsList');
   const empty = document.getElementById('emptyState');
   const data  = getSubmissions();
+  const heading = document.getElementById('submissionsHeading');
+  heading.textContent = data.length > 0 ? `Submissions (${data.length})` : 'Submissions';
 
+  empty.style.display = 'none';
   list.innerHTML = '';
   if (data.length === 0) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
 
   [...data].reverse().forEach(s => {
     const card = document.createElement('div');
@@ -122,14 +129,15 @@ function initForm() {
   const emailHint = document.getElementById('emailHint');
   const phoneHint = document.getElementById('phoneHint');
   const nameHint  = document.getElementById('nameHint');
+  const messageHint  = document.getElementById('messageHint');
 
   form.addEventListener('submit', e => {
     e.preventDefault();
     let valid = true;
 
     // Name
-    if (name.value.trim().length < 2) {
-      setFieldState(name, nameHint, false, 'Name must be at least 2 characters.');
+    if (name.value.trim().length < 2 || /[a-zA-Z]{2,}/.test(name.value.trim()) === false) {
+      setFieldState(name, nameHint, false, 'Name must be at least 2 characters and contain only letters.');
       valid = false;
     } else {
       setFieldState(name, nameHint, true, '');
@@ -159,9 +167,11 @@ function initForm() {
 
     // Message
     if (msg.value.trim() === '') {
+      setFieldState(msg, messageHint, false, 'Please enter a message.');
       valid = false;
       showToast('Please enter a message.', 'error');
     } else if (wordCount(msg.value) > 200) {
+      setFieldState(msg, messageHint, false, 'Message exceeds 200 words.');
       valid = false;
       showToast('Message exceeds 200 words.', 'error');
     }
