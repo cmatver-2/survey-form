@@ -144,7 +144,7 @@ input:focus, textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
 }
-input.invalid { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+input.invalid, textarea.invalid { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
 input.valid   { border-color: #27ae60; }
 textarea { resize: vertical; min-height: 110px; }
 

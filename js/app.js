@@ -122,6 +122,7 @@ function initForm() {
   const emailHint = document.getElementById('emailHint');
   const phoneHint = document.getElementById('phoneHint');
   const nameHint  = document.getElementById('nameHint');
+  const messageHint  = document.getElementById('messageHint');
 
   form.addEventListener('submit', e => {
     e.preventDefault();
@@ -159,9 +160,11 @@ function initForm() {
 
     // Message
     if (msg.value.trim() === '') {
+      setFieldState(msg, messageHint, false, 'Please enter a message.');
       valid = false;
       showToast('Please enter a message.', 'error');
     } else if (wordCount(msg.value) > 200) {
+      setFieldState(msg, messageHint, false, 'Message exceeds 200 words.');
       valid = false;
       showToast('Message exceeds 200 words.', 'error');
     }
