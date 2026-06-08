@@ -91,6 +91,8 @@ function renderSubmissions() {
   const list  = document.getElementById('submissionsList');
   const empty = document.getElementById('emptyState');
   const data  = getSubmissions();
+  const heading = document.getElementById('submissionsHeading');
+  heading.textContent = data.length > 0 ? `Submissions (${data.length})` : 'Submissions';
 
   empty.style.display = 'none';
   list.innerHTML = '';
