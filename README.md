@@ -39,7 +39,7 @@ survey-form/
 2. Open `index.html` in your browser
 
 ## 📸 Screenshot
-<img width="1920" height="931" alt="screenshot" src="https://github.com/user-attachments/assets/3201440d-dc1b-4e8e-b7f1-e7dfeff4f157" />
+<img width="1901" height="975" alt="Screenshot" src="https://github.com/user-attachments/assets/27db8819-fc1a-4286-9554-306f2b242422" />
 
 
 ## 👤 Author
