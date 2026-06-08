@@ -65,6 +65,11 @@ function initWordCount() {
 // ── Phone: only digits ────────────────────────────────────────
 function initPhoneFilter() {
   const phone = document.getElementById('phone');
+  phone.addEventListener('paste', (e) => {
+    e.preventDefault(); // stops browser from pasting automatically
+    const pasted = (e.clipboardData || window.clipboardData).getData('text');
+    phone.value = pasted.replace(/\D/g, '').slice(0, 10);
+  });
   phone.addEventListener('input', () => {
     phone.value = phone.value.replace(/\D/g, '').slice(0, 10);
   });
