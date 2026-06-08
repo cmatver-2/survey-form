@@ -130,7 +130,7 @@ function initForm() {
 
     // Name
     if (name.value.trim().length < 2 || /[a-zA-Z]{2,}/.test(name.value.trim()) === false) {
-      setFieldState(name, nameHint, false, 'Name must be at least 2 characters.');
+      setFieldState(name, nameHint, false, 'Name must be at least 2 characters and contain only letters.');
       valid = false;
     } else {
       setFieldState(name, nameHint, true, '');
