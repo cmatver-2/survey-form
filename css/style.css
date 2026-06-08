@@ -163,6 +163,8 @@ textarea { resize: vertical; min-height: 110px; }
 }
 .word-count.over { color: var(--accent2); font-weight: 600; }
 
+.required { color: var(--accent2); margin-left: 2px; }
+
 button[type="submit"] {
   width: 100%;
   background: var(--accent);
